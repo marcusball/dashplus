@@ -2,9 +2,9 @@
 // @name        DashPlus - Follow Back Checker
 // @namespace   http://www.dashpl.us/
 // @description Checks if the blogs you're following also follow you
-// @include     http://www.tumblr.com/following
-// @include     http://www.tumblr.com/following/*
-// @version     1.5.2
+// @include     *www.tumblr.com/following
+// @include     *www.tumblr.com/following/*
+// @version     1.5.3
 // @grant       none
 // @run-at      document-end
 // ==/UserScript==
