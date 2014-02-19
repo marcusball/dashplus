@@ -137,7 +137,7 @@ function run(){
 					singleFileUploads: true,
 					limitConcurrentUploads: 1,
 					dataType: "json",
-					url: 'http://www.tumblr.com/svc/post/upload_text_image',
+					url: '//www.tumblr.com/svc/post/upload_text_image',
 					//dropZone: c.dropZone,
 					//pasteZone: c.pasteZone,
 					formData: function (f) {
