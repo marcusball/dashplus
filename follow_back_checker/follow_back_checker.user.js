@@ -4,7 +4,7 @@
 // @description Checks if the blogs you're following also follow you
 // @include     *www.tumblr.com/following
 // @include     *www.tumblr.com/following/*
-// @version     1.5.3
+// @version     1.5.4
 // @grant       none
 // @run-at      document-end
 // ==/UserScript==
@@ -38,8 +38,17 @@ function run(){
 	$('.tab_blogs .tab_blog:not(.tab_dashboard)').each(function(){
 		blogs.push($(this).attr('id').slice(9));
 	});
+	
 	var me = blogs[0];
+	drop_down_menu('You are seeing blogs following '+ $('<div>').append($('<a>').attr('href','//www.tumblr.com/blog/'+me).html(me)).html()+'.');
 	run_check(me);
+}
+function drop_down_menu(body){
+	var div = $('<div></div>').addClass('grey_note').css('margin-top','20px');
+	var container = $('<div></div>').css('overflow','hidden').html(body);
+	div.append(container);
+	
+	$('#right_column').append(div);
 }
 function run_check(me){
 	$('div#following div.follower').each(function(index,element){
