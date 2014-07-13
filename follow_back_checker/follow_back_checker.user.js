@@ -4,7 +4,7 @@
 // @description Checks if the blogs you're following also follow you
 // @include     *www.tumblr.com/following
 // @include     *www.tumblr.com/following/*
-// @version     1.5.4
+// @version     1.5.5
 // @grant       none
 // @run-at      document-end
 // ==/UserScript==
@@ -52,28 +52,33 @@ function drop_down_menu(body){
 }
 function run_check(me){
 	$('div#following div.follower').each(function(index,element){
-		var name = $('.info .name > a',this).html();
-		if(name == null || name == "") return;
-		$.ajax({
-			type: "POST",
-			url: "/svc/tumblelog/followed_by",
-			data: {"tumblelog":me,"query":name},
-			contentType: 'application/x-www-form-urlencoded',
-			statusCode: {
-				200: function(data,textStatus,jqXHR) {
-					if(data.response.is_friend == 1){
-						$('.info',element).css({'background':'transparent url('+check_img+') scroll no-repeat center right','padding-right':'30px'});
+		if(!$(this).hasClass('dashplus_follow_checked')){
+			$(this).addClass('dashplus_follow_checked');
+			
+			var name = $('.info .name > a',this).html();
+			if(name == null || name == "") return;
+			$.ajax({
+				type: "POST",
+				url: "/svc/tumblelog/followed_by",
+				headers: {"Referer":"https://www.tumblr.com/blog/"+me+"/followers"},
+				data: {"tumblelog":me,"query":name},
+				contentType: 'application/x-www-form-urlencoded',
+				statusCode: {
+					200: function(data,textStatus,jqXHR) {
+						if(data.response.is_friend == 1){
+							$('.info',element).css({'background':'transparent url('+check_img+') scroll no-repeat center right','padding-right':'30px'});
+						}
+						$('.info',element).attr("data-tip",data.response.message).tipr();
+					},
+					400: function(jqXHR, textStatus, errorThrown){
+						data = $.parseJSON(jqXHR.responseText);
+						$('.info',element).css({'background':'transparent url('+question_img+') scroll no-repeat center right','padding-right':'30px'})
+							.tipr().attr("data-tip","Tumblr responded to the request asking if '" + name + "' follows you with \"" + data.response + "\". This is probably a sub-blog, and thus you cannot be followed by it.");
+						console.log("Tumblr responded to the request asking if '" + name + "' follows you with \"" + data.response + "\". However, some of these responses seem to be incorrect while I was testing this, so you may not want to trust it.");
 					}
-					$('.info',element).attr("data-tip",data.response.message).tipr();
-				},
-				400: function(jqXHR, textStatus, errorThrown){
-					data = $.parseJSON(jqXHR.responseText);
-					$('.info',element).css({'background':'transparent url('+question_img+') scroll no-repeat center right','padding-right':'30px'})
-						.tipr().attr("data-tip","Tumblr responded to the request asking if '" + name + "' follows you with \"" + data.response + "\". However, some of these responses seem to be incorrect while I was testing this, so you may not want to trust it.");
-					console.log("Tumblr responded to the request asking if '" + name + "' follows you with \"" + data.response + "\". However, some of these responses seem to be incorrect while I was testing this, so you may not want to trust it.");
 				}
-			}
-		});
+			});
+		}
 	});
 }
 
