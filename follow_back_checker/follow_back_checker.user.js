@@ -73,7 +73,7 @@ function run_check(me){
 					400: function(jqXHR, textStatus, errorThrown){
 						data = $.parseJSON(jqXHR.responseText);
 						$('.info',element).css({'background':'transparent url('+question_img+') scroll no-repeat center right','padding-right':'30px'})
-							.tipr().attr("data-tip","Tumblr responded to the request asking if '" + name + "' follows you with \"" + data.response + "\". This is probably a sub-blog, and thus you cannot be followed by it.");
+							.tipr().attr("data-tip","Tumblr responded to the request asking if '" + name + "' follows you with \"" + data.response + "\". This is probably a side-blog, and thus you cannot be followed by it.");
 						console.log("Tumblr responded to the request asking if '" + name + "' follows you with \"" + data.response + "\". However, some of these responses seem to be incorrect while I was testing this, so you may not want to trust it.");
 					}
 				}
