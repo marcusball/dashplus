@@ -12,7 +12,7 @@
 // @include        *tumblr.com/new/link*
 // @include        *tumblr.com/new/audio*
 // @include        *tumblr.com/new/video*
-// @version        3.1.0
+// @version        3.1.1
 // @grant          none
 // @run-at         document-end
 // ==/UserScript==
@@ -65,7 +65,7 @@ function run(){
 		numAttempts+=1;
 	}
 	else if(postTwo == 0 && postThree == 0 && numAttempts >= maxAttempts){
-		alert('DashPlus: Unable to find the insert photo button! Try again.');
+		console.log('DashPlus: Unable to find the insert photo button! Try again.');
 	}
 	else if((postTwo > 0 || postThree > 0) && numAttempts > 0){
 		//alert('Found the button on retry ' + numAttempts);
@@ -249,7 +249,7 @@ function activate(){
 }
 $(document).ready(function(){
 	loc = window.location.href;
-	if(loc.indexOf('/edit/') >= 0 || loc.indexOf('/reblog/') >= 0){ //Edit/Reblog popups
+	if(loc.indexOf('/edit/') >= 0 || loc.indexOf('/reblog/') >= 0 || loc.indexOf('/new/') >= 0){ //Edit/Reblog popups
 		if($('body').attr('id') != "tinymce"){
 			activate();
 		}
