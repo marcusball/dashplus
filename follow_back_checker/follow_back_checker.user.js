@@ -4,7 +4,7 @@
 // @description Checks if the blogs you're following also follow you
 // @include     *www.tumblr.com/following
 // @include     *www.tumblr.com/following/*
-// @version     2.0.0
+// @version     2.0.1
 // @grant       none
 // @run-at      document-end
 // ==/UserScript==
@@ -12,8 +12,8 @@
 
 
 //var check_img = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAMAAAC6V+0/AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAYBQTFRFUqhUttq2XK1ePHs9TqJQ/f799fr1LFstyuXLvd6+KVUq6vTqUKZSHjMfSJZKRpFIZbJn8/nzXq5gT6RRTZ5PcLhyS5tMRZBHdLp2VqtYHj8fFSsVk8mUcrhzi8WM3+/fUKVSqNSputy7WKtas9m0Y7FlqdSqv9/AQolEqNOpZ7NpQohDgY2BU2NTuNy5Nkk3iMSK1+PX7vDuJzwo3uPe1OnU7/fviMOJkb6TN3I43O3cLl8wqtWrmMuZnM6dl6GX0uXT5/PnQmtDqbGqMmczxM7EwuDCv8zAv86/Xo5fNFs1WqlcWaxbn8+g2ezZoaqhtcO1sdizzubPaJRpQ4xFQYZChL+F1trXSI5Kt9q4jcaOcrl0+fz6YLBie718ms2b6Oro2ufaP4NB3eTdSnpLOXU6kMeRj8eQZnRmaXdpeLR6bXtud7t4m82cXHRcjLeNm6mblriX8fXy8Pfw8/fzeZZ6U6lV6PPo7PXsaLRqbbZvS1xMQWFC0ejSUahT////lfBh+AAAAIB0Uk5T/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////wA4BUtnAAABLUlEQVR42mKoxwIYwCRrsRUHp5K6qRmSoGBtpGJumpxcVLoeG0yQW11TLlpAiCm2UlTWwBEiWBFpl8NUVgcEDJJCQhKCIMEYpXhZZYY6MGBirGKxAAqy+vnG+UDFZOXVyoQjEusZuAPlVKFi5mwydQwKIYWCDEG2EsoQMZl6GSCpIO5pyMAYJlAG0QsWAwqmeDCoyTKBxbTY1MG0sLZTAIONgCSTokpdnbw8xBCR1BpXBjdVBiaOehnFelmIIJ91nglDeRgLDxMbdz1Ecx0Ls5Q/0PEOfCLCmvX1WnUQa7j0jUDezNfm865XgdjCby3tDPZ7SXCqRpYwSJlYEpe0DjSUikrZLTX4xPhCXaR47eHhyeqe58XOziVlnBmOFPL1yQUZ1brZzgkQHkCAAQAJGIOAIXi03wAAAABJRU5ErkJggg==";
-var check_img = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAXBJREFUeNqslcsvA1EYxWfGNN6jqkK9QmvjESwEW2Fr4X9lZ2mHSNio1KaxIBJCCVU1zpFzk5smw1z6Jb%2F0tjP3zPked%2BrHcey1M3x9zoNNMPxHnSo4gLlqgEUH2P2HGGMK7HARgj6Qcdj8Bi5BDcRiCBSMoGucgyMJMgbAujEVOIrdSvAevMpdCcwYcy6CDXAM7kBTeym2ACJzk4vglajL2ThYUjMDV8EnuWPdPkEWLIPJ1obaTWmqgw393qMH8vsZuAYfoFNpzuoeL0mQYmVtjJQOO3gDTsG7DkIRLNp1SxJkXR7UxUizxaE%2FUVcZI2AV5JPKZQt2a0OvRqKimpV1nQdgDUz8dBDsp9DNoJ7O9C%2FAodYZpTmnGnppBBn9YFTrupyGOqsboOu3cWgVZNfGlJ4v1zmwpbr6roKh6liUm7xea4U0YkbgWbNmCs3uboMVucqlHP6acciB3gMv1kWmPO0g9gj2v9%2FY7f4L%2BBJgAK%2B%2FTCvBclH%2BAAAAAElFTkSuQmCC";
-var question_img = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAP5JREFUeNqslVELgjAQx91a9iBiUfggPfT9P1f0EIRICBVT%2B1%2FcYJm6uTw4ps773f%2B2m4qu66IlTfCYwLfwdSDnCS8h7iEZevgDRraB7%2BlCwVeWUtvucI2s1VdJQmQYUo79qVaNZLwA9BqaoASAUrKiF%2F8ByhFgMlUfoC1X4K0wYxUpw%2Bk9gpwZRjZYgZoQcuzdawtGFs8F2lYBVlobI1l9ELC0dxqwmNtMhQDbHoxaZjcVIF1AC6ZcMB%2BFCqDTnCPjAmr4lZqc1y53xbhKrs2J4bF2KZTRwuYCJlyqaZfUZw0bqmjki0PzBWA%2B4hqjkGA38yDQNDMisfQv4C3AAHp3Vn27XeuSAAAAAElFTkSuQmCC";
+//var check_img = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAXBJREFUeNqslcsvA1EYxWfGNN6jqkK9QmvjESwEW2Fr4X9lZ2mHSNio1KaxIBJCCVU1zpFzk5smw1z6Jb%2F0tjP3zPked%2BrHcey1M3x9zoNNMPxHnSo4gLlqgEUH2P2HGGMK7HARgj6Qcdj8Bi5BDcRiCBSMoGucgyMJMgbAujEVOIrdSvAevMpdCcwYcy6CDXAM7kBTeym2ACJzk4vglajL2ThYUjMDV8EnuWPdPkEWLIPJ1obaTWmqgw393qMH8vsZuAYfoFNpzuoeL0mQYmVtjJQOO3gDTsG7DkIRLNp1SxJkXR7UxUizxaE%2FUVcZI2AV5JPKZQt2a0OvRqKimpV1nQdgDUz8dBDsp9DNoJ7O9C%2FAodYZpTmnGnppBBn9YFTrupyGOqsboOu3cWgVZNfGlJ4v1zmwpbr6roKh6liUm7xea4U0YkbgWbNmCs3uboMVucqlHP6acciB3gMv1kWmPO0g9gj2v9%2FY7f4L%2BBJgAK%2B%2FTCvBclH%2BAAAAAElFTkSuQmCC";
+//var question_img = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAP5JREFUeNqslVELgjAQx91a9iBiUfggPfT9P1f0EIRICBVT%2B1%2FcYJm6uTw4ps773f%2B2m4qu66IlTfCYwLfwdSDnCS8h7iEZevgDRraB7%2BlCwVeWUtvucI2s1VdJQmQYUo79qVaNZLwA9BqaoASAUrKiF%2F8ByhFgMlUfoC1X4K0wYxUpw%2Bk9gpwZRjZYgZoQcuzdawtGFs8F2lYBVlobI1l9ELC0dxqwmNtMhQDbHoxaZjcVIF1AC6ZcMB%2BFCqDTnCPjAmr4lZqc1y53xbhKrs2J4bF2KZTRwuYCJlyqaZfUZw0bqmjki0PzBWA%2B4hqjkGA38yDQNDMisfQv4C3AAHp3Vn27XeuSAAAAAElFTkSuQmCC";
 
 var idPrefix = "dashplus_follow_back_";
 var classPrefix = idPrefix;
@@ -64,7 +64,7 @@ function run_check(me){
 			var nameLink = followerDiv.querySelector('.info .name > a');
 			if(nameLink !== null && 'null' !== nameLink){ //Because JavaScript fails at having a "continue" operator. 
 				var name = nameLink.innerHTML;
-				//console.log(name);
+				console.log(name);
 				
 				if(name !== null && name !== ''){
 					//Okay, now let's do an Ajax POST request
@@ -78,22 +78,25 @@ function run_check(me){
 						//The response has finished, let's check the response
 						if(xhr.status == 200){ //If the response status is OK
 							var data = JSON.parse(xhr.responseText); //Parse the JSON response
-							console.log(data);
+							//console.log(data);
 							
 							var followerRow = followerDiv.querySelector('.info');
 							
 							
 							if(data.response.is_friend == 1){
+                                //The user is following back
 								icon.className += " chrome green big";
 								icon.innerHTML = "";
 							}
 							else{
+                                //The user is not following back
 								icon.className += " chrome red big";
 								icon.innerHTML = "";
 							}
 							
 						}
 						else if(xhr.status == 400){
+                            //The blog in question is a side-blog, and therefore cannot follow back.
 							icon.className += " chrome big viewhide";
 							icon.innerHTML = "";
 						}
@@ -110,6 +113,4 @@ function run_check(me){
 	});
 }
 
-document.addEventListener('DOMContentLoaded', function(event){
-	run();
-});
+run();
