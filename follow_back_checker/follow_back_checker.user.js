@@ -4,7 +4,7 @@
 // @description Checks if the blogs you're following also follow you
 // @include     *www.tumblr.com/following
 // @include     *www.tumblr.com/following/*
-// @version     2.0.1
+// @version     2.0.2
 // @grant       none
 // @run-at      document-end
 // ==/UserScript==
@@ -28,7 +28,7 @@ function run(){
 	Array.prototype.forEach.call(blogTabs, function(blogTab){
 		blogs.push(blogTab.getAttribute('id').slice(9));
 	});
-	
+
 	me = blogs[0]; //Use the first blog from the user's sidebar by default
 	drop_down_menu(blogs,me);
 	run_check(me);
@@ -37,13 +37,13 @@ function drop_down_menu(blogs,me){
 	//Construct a link
 	var blogLink = document.createElement('div');
 	blogLink.insertAdjacentHTML('beforeend', '<a href="//www.tumblr.com/blog/'+me+'">'+me+'</a>');
-	
+
 	//Create a container for the text and the link
 	container = document.createElement('div');
 	container.insertAdjacentHTML('beforeend',
 		'You are seeing blogs that follow ' + blogLink.outerHTML
 	);
-	
+
 	//And put that container in another box
 	div = document.createElement('div');
 	div.insertAdjacentHTML('beforeend',container.outerHTML);
@@ -51,8 +51,8 @@ function drop_down_menu(blogs,me){
 	div.style.overflow = 'hidden';
 	div.style.marginTop = '20px';
 	div.setAttribute('id',idPrefix + 'sidebar_box');
-	
-	//And then add it to the sidebar 
+
+	//And then add it to the sidebar
 	document.getElementById('right_column').insertAdjacentHTML('beforeend',div.outerHTML);
 }
 function run_check(me){
@@ -60,29 +60,29 @@ function run_check(me){
 	Array.prototype.forEach.call(followerDivs, function(followerDiv){
 		if(followerDiv.className.indexOf(classPrefix + "checked") < 0){
 			followerDiv.className += " " + classPrefix + "checked";
-			
+
 			var nameLink = followerDiv.querySelector('.info .name > a');
-			if(nameLink !== null && 'null' !== nameLink){ //Because JavaScript fails at having a "continue" operator. 
+			if(nameLink !== null && 'null' !== nameLink){ //Because JavaScript fails at having a "continue" operator.
 				var name = nameLink.innerHTML;
 				console.log(name);
-				
+
 				if(name !== null && name !== ''){
 					//Okay, now let's do an Ajax POST request
 					var xhr = new XMLHttpRequest();
-					xhr.open('POST',encodeURI('/svc/tumblelog/followed_by'));
+					xhr.open('GET',encodeURI('/svc/blog/followed_by?' + encodeURI('tumblelog='+me+'&query='+name)));
 					xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
 					xhr.onload = function(){
 						var icon = document.createElement('div');
 						icon.className += " " + classPrefix + "status";
-					
+
 						//The response has finished, let's check the response
 						if(xhr.status == 200){ //If the response status is OK
 							var data = JSON.parse(xhr.responseText); //Parse the JSON response
 							//console.log(data);
-							
+
 							var followerRow = followerDiv.querySelector('.info');
-							
-							
+
+
 							if(data.response.is_friend == 1){
                                 //The user is following back
 								icon.className += " chrome green big";
@@ -93,20 +93,20 @@ function run_check(me){
 								icon.className += " chrome red big";
 								icon.innerHTML = "";
 							}
-							
+
 						}
 						else if(xhr.status == 400){
                             //The blog in question is a side-blog, and therefore cannot follow back.
 							icon.className += " chrome big viewhide";
 							icon.innerHTML = "";
 						}
-						else{ //If the response is anything other than OK. 
+						else{ //If the response is anything other than OK.
 							console.log("DashPlus Follow Back: Error fetching follow-back status.");
 							console.log(xhr);
 						}
 						followerDiv.querySelector('.info').insertAdjacentHTML('afterend',icon.outerHTML);
 					}
-					xhr.send(encodeURI('tumblelog='+me+'&query='+name));
+					xhr.send();
 				}
 			}
 		}
